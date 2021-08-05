@@ -21,7 +21,7 @@ speed_y = 0
 moving = False
 
 def move(x,y):
-  global speed_x, speed_y
+  global speed_x, speed_y, moving
   speed_x += x
   speed_y += y
   fish_rect.move_ip(speed_x, speed_y)
@@ -33,26 +33,48 @@ def reset():
 
 
 def main():
-  global moving
+  global moving, speed_x, speed_y
+  x = 0
+  y = 0
   while True:
-    clock.tick(60)
+    clock.tick(30)
     screen.fill(color)
     for event in pygame.event.get():
       if event.type == QUIT:
         sys.exit()
       if event.type == KEYDOWN:
         if event.key == K_w:
-          move(0,-5)
-          reset()
+          x = 0
+          y = -1
+          moving = True
         if event.key == K_s:
-          move(0,5)
-          reset()
+          x = 0
+          y = 1
+          moving = True
         if event.key == K_d:
-          move(5,0)
-          reset()
+          x = 1
+          y = 0
+          moving = True
         if event.key == K_a:
-          move(-5,0)
+          x = -1
+          y = 0
+          moving = True
+      elif event.type == KEYUP:
+        if event.key == K_w:
           reset()
+          moving = False
+        if event.key == K_s:
+          reset()
+          moving = False
+        if event.key == K_d:
+          reset()
+          moving = False
+        if event.key == K_a:
+          reset()
+          moving = False
+    if moving:
+      print(speed_x)
+      move(x, y)
     screen.blit(shark, fish_rect)
     pygame.display.flip()
 
